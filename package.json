@@ -32,12 +32,16 @@
   "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/types/index.d.ts",
-      "default": "./dist/index.js"
+      "import": {
+        "types": "./dist/types/index.d.ts",
+        "default": "./dist/index.js"
+      }
     },
     "./components": {
-      "types": "./src/components/index.d.ts",
-      "default": "./src/components/index.ts"
+      "import": {
+        "types": "./src/components/index.d.ts",
+        "default": "./src/components/index.ts"
+      }
     }
   },
   "typesVersions": {
