@@ -252,7 +252,7 @@ export const localizePath = (
   }
 
   // check if the path is not already present in flatRoutes
-  if (locale === defaultLocale) {
+  if (locale === defaultLocale || showDefaultLocale) {
     const translatedPathKey = Object.keys(flatRoutes).find(
       (key) => flatRoutes[key] === "/" + path
     );

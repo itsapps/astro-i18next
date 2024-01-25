@@ -30,9 +30,7 @@ export const generate = (
   const start = process.hrtime();
 
   // default locale page paths
-  const astroPagesFullPaths = showDefaultLocale
-    ? getAstroPagesFullPaths(inputPath, defaultLocale, locales)
-    : getAstroPagesFullPaths(inputPath, undefined, locales);
+  const astroPagesFullPaths = getAstroPagesFullPaths(inputPath, undefined, locales);
 
   const filesToGenerate: FileToGenerate[] = [];
   astroPagesFullPaths.forEach(async function (astroFileFullPath: string) {
@@ -41,9 +39,7 @@ export const generate = (
       ""
     );
 
-    const inputFilePath = showDefaultLocale
-      ? [inputPath, defaultLocale, astroFilePath].join("/")
-      : [inputPath, astroFilePath].join("/");
+    const inputFilePath = [inputPath, astroFilePath].join("/");
 
     const fileContents = fs.readFileSync(inputFilePath);
     const fileContentsString = fileContents.toString();
@@ -51,8 +47,8 @@ export const generate = (
     const parsedFrontmatter = parseFrontmatter(fileContentsString);
 
     locales.forEach((locale) => {
-      const isOtherLocale = locale !== defaultLocale;
-      const fileDepth = showDefaultLocale ? 0 : Number(isOtherLocale);
+      const isOtherLocale = (locale !== defaultLocale) || showDefaultLocale;
+      const fileDepth = Number(isOtherLocale);
 
       // add i18next's changeLanguage function to frontmatter
       const frontmatterCode = generateLocalizedFrontmatter(
@@ -69,13 +65,11 @@ export const generate = (
       // add depth to imports and Astro.glob pattern
       newFileContents = resolveRelativePathsLevel(newFileContents, fileDepth);
 
-      const createLocaleFolder = showDefaultLocale ? true : isOtherLocale;
-
       filesToGenerate.push({
         path: resolve(
           resolveTranslatedAstroPath(
             astroFilePath,
-            createLocaleFolder ? locale : undefined,
+            isOtherLocale ? locale : undefined,
             outputPath,
             flatRoutes
           )
