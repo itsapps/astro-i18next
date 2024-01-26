@@ -6,4 +6,9 @@ export default defineConfig({
       reporter: ["text", "json", "html"],
     },
   },
+  rollupOptions: {
+    external: [
+      "i18next"
+    ]
+  }
 });

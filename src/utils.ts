@@ -81,7 +81,7 @@ export const interpolate = (
     tagsRegex.exec("");
   });
 
-  let interpolatedString = localizedString;
+  let interpolatedString = localizedString || "";
   for (let index = 0; index < referenceTags.length; index++) {
     const referencedTag = referenceTags[index];
     // Replace opening tags
@@ -206,8 +206,17 @@ export const localizePath = (
   locale: string | null = null,
   base: string = import.meta.env.BASE_URL
 ): string => {
+
+  const {
+    flatRoutes,
+    showDefaultLocale,
+    defaultLocale,
+    locales,
+    trailingSlash,
+  } = AstroI18next.config;
+
   if (!locale) {
-    locale = i18next.language;
+    locale = i18next.language || defaultLocale;
   }
 
   let pathSegments = path.split("/").filter((segment) => segment !== "");
@@ -224,14 +233,6 @@ export const localizePath = (
 
   path = pathSegments.length === 0 ? "" : pathSegments.join("/");
   base = baseSegments.length === 0 ? "/" : "/" + baseSegments.join("/") + "/";
-
-  const {
-    flatRoutes,
-    showDefaultLocale,
-    defaultLocale,
-    locales,
-    trailingSlash,
-  } = AstroI18next.config;
 
   if (!locales.includes(locale)) {
     console.warn(
